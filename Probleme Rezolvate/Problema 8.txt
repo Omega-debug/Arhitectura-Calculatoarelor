@@ -1,0 +1,38 @@
+; Se da un sir de bytes S: 2,4,5,4,2. Sa se verifice daca este palindromic
+assume ds:data, cs:code 
+data segment
+s db 2,4,5,4,2
+ls equ ($-s)/2
+ok db 0
+data ends
+code segment 
+start:
+mov si,ls
+mov di,ls
+mov cx,ls 
+
+mov ax,0
+mov bx,0
+
+mov al,s[1]
+mov bl,s[3];
+
+;repeta:
+;sub si,1
+;add di,1
+;mov al,s[si]
+;mov bl,s[di]
+;cmp al,bl
+;JNE nu
+;JE sari
+
+;nu:
+;mov ok,0
+
+;sari:
+;loop repeta 
+
+mov ax,4C00h
+int 21h
+code ends 
+end start 

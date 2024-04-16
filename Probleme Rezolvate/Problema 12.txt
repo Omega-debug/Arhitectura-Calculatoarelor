@@ -1,0 +1,77 @@
+; Se da un sir de la tastatura, sa se verifice daca este palindromic:
+; s = 4,2,5,2,5
+assume ds:data, cs:code 
+data segment
+s db 30, ?, 30 dup(0)
+t db 2
+k db 4
+ok db 1
+s1 db 'DA', '$'
+s2 db 'NU', '$'
+data ends 
+code segment 
+start:
+mov ax, data 
+mov ds, ax
+mov es, ax
+
+mov ah,0Ah
+mov dx, offset s
+int 21h
+
+mov al, s[1]
+mov ah,0
+mov cx,ax; lungimea sirului s 
+div t; in al catul
+mov ah,0
+mov si,ax 
+add si,2
+mov di,ax 
+add di,2
+mov ax,cx
+div k
+mov cl,al
+mov ch,0
+ 
+repeta:
+add si,2 ; ca sa sar peste spatiu sau virgula
+sub di,2
+mov al, s[si]
+mov bl, s[di]
+cmp al,bl
+JNE naspa
+JE sari
+
+naspa:
+mov ok,0
+
+sari:
+loop repeta 
+
+mov ah,02h
+mov dl,10 
+int 21h
+
+cmp ok,1
+JE da 
+JNE nu 
+
+
+da:
+mov ah,09h
+mov dx,offset s1 
+int 21h 
+
+jmp sfarsit
+
+nu:
+mov ah,09h
+mov dx,offset s2 
+int 21h
+
+sfarsit:
+
+mov ax,4C00h
+int 21h
+code ends
+end start 

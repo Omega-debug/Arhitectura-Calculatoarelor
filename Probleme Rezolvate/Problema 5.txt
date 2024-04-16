@@ -1,0 +1,37 @@
+;4. Se da un numar n (0<n<256) in segmentul de date. Sa se genereze si sa se afiseze pe ecran secventa 1, 2, 3, ..., n-1, n.
+;Exemplu:
+;n = 6
+;rezultat: 1, 2, 3, 4, 5, 6
+
+assume ds:data, cs:code
+data segment
+data ends 
+code segment 
+start:
+
+mov ax, data 
+mov ds, ax 
+mov es,ax
+
+mov ah,01h
+int 21h ; in al avem codul ascii
+sub dl,'0'
+mov bl, dl
+
+mov dh,0
+mov cx,dx 
+
+repeta:
+mov dl,bl 
+mov ah,02h
+int 21h
+mov dl,'0'
+mov ah,02h
+int 21h
+sub bl,1
+loop repeta 
+
+mov ax,4C00h
+int 21h
+code ends 
+end start 

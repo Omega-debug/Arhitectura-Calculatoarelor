@@ -1,0 +1,42 @@
+; 2,Se sa un sir de cuvinte S in segmentul de date. Sa se construiasca sirul D care sa contina suma octetilor firecarui cuvant din sirul S si sa se afiseze acest sir pe ecran. Se va folosi interpretarea fara semn
+; S: 1A2Bh, 3C2Bh, 7834h, 1213h
+; D: 69,238,172,37
+assume ds:data, cs:code 
+data segment 
+s dw 1A2Bh, 3C2Bh, 7834h, 1213h
+ls equ ($-s)/2
+d db ls dup(0)
+data ends
+code segment
+start:
+mov ax, data 
+mov es, ax
+mov ds, ax
+
+mov si,0
+mov bp,0
+mov cx,ls
+
+repeta:
+mov al, byte ptr s[si]
+mov bl, byte ptr s[si+1]
+add al,bl
+mov d[bp],al
+;add d[bp],'0'
+add bp,1
+mov d[bp],','
+;add d[bp],'0'
+add bp,1
+add si,2
+loop repeta
+
+;mov d[bp],'$'
+;mov ah,09h
+;mov dx, offset d 
+;int 21h
+
+
+mov ax,4C00h
+int 21h
+code ends 
+end start

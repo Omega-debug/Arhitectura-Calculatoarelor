@@ -1,0 +1,40 @@
+;2. Sa se citeasca de la tastatura un sir de octeti S si sa se afiseze pe ecran suma lor.
+;Exemplu:
+;S: 1, 2, 3, 4
+;Suma: 10
+
+assume ds:data, cs:code
+data segment
+s db 10, ? ,  10 dup(0)
+data ends 
+code segment 
+start:
+mov ax, data 
+mov ds, ax
+mov es, ax 
+
+mov ah,0Ah
+mov dx, offset s
+int 21h
+
+mov si,2; trecem peste lungimea sirului
+mov al, byte ptr s[1]
+mov ah,0
+mov cx,ax 
+mov dl,0
+
+repeta:
+mov al, s[si]
+sub al,'0'
+add dl, al
+add si,1
+loop repeta 
+
+mov ah,02h
+int 21h
+
+mov ax, 4C00h
+int 21h
+code ends 
+end start 
+ 

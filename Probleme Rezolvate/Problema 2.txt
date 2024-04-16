@@ -1,0 +1,60 @@
+;8. Sa se citeasca un sir de caractere si un caracter de la tastatura si sa se afiseze pe ecran daca caracterul apare in sir.
+;Exemplu:
+;S: "ana are mere"
+;C: 'a'
+;rezultat: "DA"
+
+assume ds:data, cs:code
+data segment
+s db 30,?,30 dup(0)
+cnt db 0
+data ends
+code segment 
+start:
+mov ax, data 
+mov es, ax 
+mov ds, ax
+
+mov ah,0Ah
+mov dx, offset s 
+int 21h
+
+mov ah,02h
+mov dl,10
+int 21h
+
+mov ah,01h
+int 21h; in al avem codul ascii
+
+mov bl, s[1]
+mov bh,0
+
+mov cx,bx; lungimea sirului s 
+mov si,2
+
+repeta:
+mov dl, s[si]
+cmp dl,al
+JE creste
+JNE sari
+
+creste:
+add cnt,1
+
+sari:
+add si,1
+loop repeta
+
+mov ah,02h
+mov dl,10
+int 21h
+
+mov ah,02h
+mov dl,cnt 
+add dl,'0'
+int 21h
+
+mov ax,4C00h
+int 21h
+code ends 
+end start 

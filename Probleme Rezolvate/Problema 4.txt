@@ -1,0 +1,55 @@
+;7. Sa se citeasca un sir de caractere si un caracter de la tastatura si sa se afiseze de cate ori apare caracterul in sir.
+;Exemplu:
+;S: "ana are mere"
+;C: 'a'
+;rezultat: 3
+
+assume ds:data, cs:code 
+data segment
+s db 20, ?, 20 dup(0)
+a db 'a'
+;linie_noua db 13, 10, '$
+data ends
+code segment 
+start:
+mov ax, data 
+mov ds, ax 
+mov es, ax 
+mov ah,0Ah
+mov dx, offset s
+int 21h
+
+mov al, byte ptr s[1]
+mov ah,0
+
+mov cx,ax 
+mov si,2
+mov bl,0
+
+repeta:
+mov al, s[si]
+cmp a,al 
+JE creste
+JNE sari
+
+creste:
+add bl,1
+
+sari:
+add si,1 
+loop repeta 
+
+ mov ah,02h
+ mov dl,10
+ int 21h
+
+mov dl,bl 
+add dl,'0'
+mov ah,02h 
+int 21h
+
+
+mov ax,4C00h
+int 21h
+code ends 
+end start 

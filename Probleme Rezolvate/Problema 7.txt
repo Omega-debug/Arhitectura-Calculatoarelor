@@ -1,0 +1,46 @@
+;1. Se da un sir de octeti in segmentul de date. Sa se construiasca sirul D care sa contina suma elementelor consecutive din sirul S si sa se afiseze acest sir pe ecran.
+;Exemplu:
+;S: 1, 2, 3, 4
+;D: 3, 5, 7
+
+assume ds:data, cs:code 
+data segment 
+s db 1,2,3,4
+ls equ $-s 
+d db (ls-1) dup(0)
+data ends 
+code segment 
+start:
+
+mov ax,data 
+mov ds,ax 
+mov es,ax 
+
+mov cx,ls-1 
+mov si,0
+
+repeta:
+mov al, s[si]
+mov bl, s[si+1]
+add al,bl 
+mov d[si],al 
+add d[si],'0'
+add si,1
+loop repeta 
+
+mov cx,ls-1 
+mov si,0
+afiseaza:
+mov dl, d[si]
+mov ah,02h
+int 21h
+mov dl, ','
+int 21h
+add si,1 
+loop afiseaza 
+
+
+mov ax,4C00h
+int 21h 
+code ends 
+end start 

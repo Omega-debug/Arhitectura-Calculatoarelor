@@ -1,0 +1,99 @@
+;13. Se citesc de la tastatura doua cuvinte A si B. Sa se calculeze si sa se afiseze cuvantul pe ecran cuvantul C astfel:
+;- bitii 0-3 ai lui C coincid cu bitii 4-7 ai lui A
+;- bitii 4-7 ai lui C coincid cu bitii 1-4 ai lui B
+;- bitii 8-10 ai lui C sunt 0
+;- bitii 11-15 ai lui C coincid cu bitii 7-11 ai lui B
+;Exemplu:
+;A = 12487
+;B = 35147
+;C = 36956
+
+assume cs:code, ds:data
+data segment
+	sir db 30, ?, 30 dup(0)
+	a dw 0
+	b dw 0
+	c dw 0
+	aux dw ?
+data ends
+
+code segment
+start:
+
+	mov ax, data
+	mov ds, ax
+
+	;citesc de la tasatura sirul de numere 
+	mov ah, 0Ah
+	mov dx, offset sir
+	int 21h
+	
+	;salvez in cx numarul de caractere
+	mov al, byte ptr sir[1]
+	mov ah,0
+	mov cx,ax
+	
+	mov si,2
+	mov bx,10
+	repetaA:
+		mov al, sir[si]
+		
+		cmp al,','
+		JE trecemLaB
+		
+		sub al, '0' ;caracter->numar
+		mov ah,0 ;ax e numarul
+		mov aux,ax
+		mov ax, word ptr a
+		mul bx
+		add ax, aux
+		mov word ptr a, ax
+		inc si
+	loop repetaA
+	
+	trecemLaB:
+		inc si
+		dec cx
+		repetaB:
+			mov al, sir[si]
+			
+			sub al, '0' ;caracter->numar
+			mov ah,0 ;ax e numarul
+			
+			mov aux,ax
+			mov ax, word ptr b
+			mul bx
+			add ax, aux
+			mov word ptr b, ax
+			inc si
+		loop repetaB
+	
+	mov bx, 0
+	;- bitii 0-3 ai lui C coincid cu bitii 4-7 ai lui A
+	mov ax,a
+	and ax, 0000000011110000b
+	shr ax, 4
+	or bx, ax
+	
+	;- bitii 4-7 ai lui C coincid cu bitii 1-4 ai lui B
+	mov ax,b
+	and ax, 0000000000011110b
+	shl ax, 3
+	or bx,ax
+	
+	;- bitii 8-10 ai lui C sunt 0
+	or bx, 0000000000000000b
+	
+	;- bitii 11-15 ai lui C coincid cu bitii 7-11 ai lui B
+	mov ax, b
+	and ax, 0000111110000000b
+	shl ax,4
+	or bx,ax
+	
+	mov c, bx
+	
+	
+mov ax,4C00h
+int 21h
+code ends
+end start 
